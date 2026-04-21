@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贵阳银行成都分行收益计算器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        body {
+            padding: 20px;
+            width: 400px;
+            margin: 0 auto;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+        h2 {
+            font-size: 26px;
+            color: red;
+            text-align: center;
+            font-weight: bold;
+        }
+        .label {
+            font-size: 16px;
+            color: green;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .section {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .section-title {
+            font-size: 18px;
+            background: #007bff;
+            color: #fff;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .section-body {
+            padding: 15px;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: end;
+            margin-bottom:12px;
+        }
+        .col {
+            flex: 1;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        #result {
+            font-size: 18px;
+            color: green;
+            text-align: left;
+            margin-top: 25px;
+            line-height: 1.6;
+            white-space: pre-line;
+            padding:10px;
+            border:1px solid #ccc;
+            border-radius:6px;
+        }
+    </style>
+</head>
+<body>
+
+<img src="logo.gif" class="logo" alt="贵阳银行LOGO">
+<h2>收益计算器</h2>
+
+<!-- 存款业务 -->
+<div class="section">
+    <div class="section-title">存款业务</div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col">
+                <span class="label">金额</span>
+                <input type="number" id="depositMoney" placeholder="万元" min="0">
+            </div>
+            <div class="col">
+                <span class="label">期限</span>
+                <select id="depositTerm" onchange="setDepositRate()">
+                    <option value="活期">活期</option>
+                    <option value="6个月">6个月</option>
+                    <option value="1年">1年</option>
+                </select>
+            </div>
+            <div class="col">
+                <span class="label">利率</span>
+                <input type="number" id="depositRate" placeholder="%" min="0" step="0.01">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 贷款业务 -->
+<div class="section">
+    <div class="section-title">贷款业务</div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col">
+                <span class="label">金额</span>
+                <input type="number" id="loanMoney" placeholder="万元" min="0">
+            </div>
+            <div class="col">
+                <span class="label">期限</span>
+                <select id="loanTerm">
+                    <option value="1">1年</option>
+                    <option value="2">2年</option>
+                    <option value="3">3年</option>
+                    <option value="5">5年</option>
+                </select>
+            </div>
+            <div class="col">
+                <span class="label">利率</span>
+                <input type="number" id="loanRate" placeholder="%" min="0" step="0.01">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 信用证和福费廷 -->
+<div class="section">
+    <div class="section-title">信用证和福费廷</div>
+    <div class="section-body">
+        <div style="font-size:17px; color:#333; margin-bottom:10px;">进口信用证</div>
+        <div class="row">
+            <div class="col"><span class="label">金额</span><input type="number" id="lc1_amt" placeholder="万元" min="0"></div>
+            <div class="col"><span class="label">费率</span><input type="number" id="lc1_rate" placeholder="%" min="0" step="0.01"></div>
+            <div class="col"><span class="label">笔数</span><input type="number" id="lc1_cnt" placeholder="笔" min="0"></div>
+        </div>
+
+        <div style="font-size:17px; color:#333; margin-bottom:10px; margin-top:15px;">国内信用证</div>
+        <div class="row">
+            <div class="col"><span class="label">金额</span><input type="number" id="lc2_amt" placeholder="万元" min="0"></div>
+            <div class="col"><span class="label">费率</span><input type="number" id="lc2_rate" placeholder="%" min="0" step="0.01"></div>
+            <div class="col"><span class="label">笔数</span><input type="number" id="lc2_cnt" placeholder="笔" min="0"></div>
+        </div>
+
+        <div style="font-size:17px; color:#333; margin-bottom:10px; margin-top:15px;">福费廷</div>
+        <div class="row">
+            <div class="col"><span class="label">金额</span><input type="number" id="lc3_amt" placeholder="万元" min="0"></div>
+            <div class="col"><span class="label">费率</span><input type="number" id="lc3_rate" placeholder="%" min="0" step="0.01"></div>
+            <div class="col"><span class="label">笔数</span><input type="number" id="lc3_cnt" placeholder="笔" min="0"></div>
+        </div>
+    </div>
+</div>
+
+<button onclick="calculate()">计算收益</button>
+<div id="result"></div>
+
+<script>
+// 页面加载时自动填入默认利率
+window.onload = function() {
+    setDepositRate();
+};
+
+// 选择存款期限 → 自动填利率
+function setDepositRate() {
+    let term = document.getElementById("depositTerm").value;
+    let rateInput = document.getElementById("depositRate");
+    
+    switch(term) {
+        case "活期": rateInput.value = 0.25; break;
+        case "6个月": rateInput.value = 1.30; break;
+        case "1年": rateInput.value = 1.40; break;
+        default: rateInput.value = 1.40;
+    }
+}
+
+function calculate() {
+    // ====================== 存款业务 ======================
+    let depositMoney = Math.max(0, parseFloat(document.getElementById("depositMoney").value || 0));
+    let depositTerm = document.getElementById("depositTerm").value;
+    // 从输入框读取利率（支持手动修改）
+    let rate = Math.max(0, parseFloat(document.getElementById("depositRate").value || 0));
+
+    const avgRate = 3.20;
+    const operateCost = 0.64;
+    const riskCost = 0.16;
+
+    let year;
+    switch (depositTerm) {
+        case "活期": year = 1; break;
+        case "6个月": year = 0.5; break;
+        case "1年": year = 1; break;
+        default: year = 1;
+    }
+
+    let depositProfit = depositMoney * ((avgRate - rate - operateCost) * 0.75 - riskCost) / 100 * year;
+
+    // ====================== 贷款业务 ======================
+    let loanMoney = Math.max(0, parseFloat(document.getElementById("loanMoney").value || 0));
+    let loanRate = Math.max(0, parseFloat(document.getElementById("loanRate").value || 0));
+    let loanYearVal = parseInt(document.getElementById("loanTerm").value) || 1;
+
+    let fundCost;
+    switch (loanYearVal) {
+        case 1: fundCost = 2.10; break;
+        case 2: fundCost = 2.30; break;
+        case 3: fundCost = 2.50; break;
+        case 5: fundCost = 2.60; break;
+        default: fundCost = 2.10;
+    }
+
+    const loanOperateCost = 0.64;
+    const loanRiskCost = 1.0;
+    const ecoCapitalCost = 0.72;
+
+    let loanProfit = loanMoney * (
+        (loanRate * 0.9366 - fundCost - loanOperateCost - loanRiskCost) * 0.75
+        - ecoCapitalCost
+    ) / 100 * loanYearVal;
+
+    // ====================== 信用证 & 福费廷 ======================
+    let lc1_amt = Math.max(0, parseFloat(document.getElementById("lc1_amt").value || 0));
+    let lc1_rate = Math.max(0, parseFloat(document.getElementById("lc1_rate").value || 0));
+    let lc1_cnt = Math.max(0, parseFloat(document.getElementById("lc1_cnt").value || 0));
+    let lc1_profit = lc1_amt * lc1_rate / 100 * lc1_cnt;
+
+    let lc2_amt = Math.max(0, parseFloat(document.getElementById("lc2_amt").value || 0));
+    let lc2_rate = Math.max(0, parseFloat(document.getElementById("lc2_rate").value || 0));
+    let lc2_cnt = Math.max(0, parseFloat(document.getElementById("lc2_cnt").value || 0));
+    let lc2_profit = lc2_amt * lc2_rate / 100 * lc2_cnt;
+
+    let lc3_amt = Math.max(0, parseFloat(document.getElementById("lc3_amt").value || 0));
+    let lc3_rate = Math.max(0, parseFloat(document.getElementById("lc3_rate").value || 0));
+    let lc3_cnt = Math.max(0, parseFloat(document.getElementById("lc3_cnt").value || 0));
+    let lc3_profit = lc3_amt * lc3_rate / 100 * lc3_cnt;
+
+    // 合计
+    let otherTotal = lc1_profit + lc2_profit + lc3_profit;
+    let grandTotal = depositProfit + loanProfit + otherTotal;
+
+    // 输出结果
+    document.getElementById("result").innerText =
+        "存款收益：" + depositProfit.toFixed(4) + " 万元\n" +
+        "贷款收益：" + loanProfit.toFixed(4) + " 万元\n" +
+        "进口信用证收益：" + lc1_profit.toFixed(2) + " 万元\n" +
+        "国内信用证收益：" + lc2_profit.toFixed(2) + " 万元\n" +
+        "福费廷收益：" + lc3_profit.toFixed(2) + " 万元\n\n" +
+        "总收益：" + grandTotal.toFixed(4) + " 万元";
+}
+</script>
+</body>
+</html>
